@@ -40,9 +40,7 @@ public class Fragment_weather extends Fragment {
     private TextView citytxt;
     private TextView tmptxt;
     private TextView conditiontxt;
-    private TextView day_date_txt; // New combined date view
-    private TextView daytxt; // Legacy, kept for compatibility (hidden)
-    private TextView datetxt; // Legacy, kept for compatibility (hidden)
+    private TextView day_date_txt;
     private TextView windspeedtxt;
     private TextView humidtxt;
     private SearchView searchbar;
@@ -75,8 +73,6 @@ public class Fragment_weather extends Fragment {
         // Primary metrics
         lottieAnimationView = view.findViewById(R.id.lottieAnimationView);
         citytxt        = view.findViewById(R.id.citytxt);
-        daytxt         = view.findViewById(R.id.daytxt);
-        datetxt        = view.findViewById(R.id.datetxt);
         tmptxt         = view.findViewById(R.id.tmptxt);
         conditiontxt   = view.findViewById(R.id.conditiontxt);
         day_date_txt   = view.findViewById(R.id.day_date_txt);

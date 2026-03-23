@@ -51,10 +51,10 @@
                 android:id="@+id/citytxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="London"
                 android:textColor="@color/on_surface"
-                android:textSize="36sp"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="36sp" />
 
             <TextView
                 android:id="@+id/day_date_txt"
@@ -63,7 +63,6 @@
                 android:layout_marginTop="2dp"
                 android:alpha="0.7"
                 android:text="Monday, 23 March"
-                android:textColor="@color/on_surface_variant"
                 android:textSize="14sp" />
 
             <com.airbnb.lottie.LottieAnimationView
@@ -80,7 +79,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="24°C"
-                android:textColor="@color/temp_text"
                 android:textSize="96sp"
                 android:fontFamily="sans-serif-black"
                 android:includeFontPadding="false" />
@@ -96,11 +94,6 @@
                 android:textSize="22sp" />
 
         </LinearLayout>
-
-        <!-- Hidden legacy views for compatibility -->
-        <TextView android:id="@+id/daytxt" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints" />
-        <TextView android:id="@+id/datetxt" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints" />
-
 
 
             <!-- Horizontal Row 1 -->
@@ -235,7 +228,6 @@
                     android:id="@+id/sun_divider"
                     android:layout_width="1dp"
                     android:layout_height="40dp"
-                    android:background="@color/card_stroke"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
