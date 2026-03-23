@@ -38,17 +38,15 @@ public class Fragment_weather extends Fragment {
     // UI Components - Primary
     private LottieAnimationView lottieAnimationView;
     private TextView citytxt;
-    private TextView daytxt;
-    private TextView datetxt;
     private TextView tmptxt;
     private TextView conditiontxt;
+    private TextView day_date_txt;
     private TextView windspeedtxt;
     private TextView humidtxt;
     private SearchView searchbar;
     private TextView feelsliketxt;
     private TextView minmaxtxt;
     private TextView pressuretxt;
-    private TextView cloudcovertxt;
     private TextView visibilitytxt;
     private TextView sunrisetxt;
     private TextView sunsettxt;
@@ -75,22 +73,33 @@ public class Fragment_weather extends Fragment {
         // Primary metrics
         lottieAnimationView = view.findViewById(R.id.lottieAnimationView);
         citytxt        = view.findViewById(R.id.citytxt);
-        daytxt         = view.findViewById(R.id.daytxt);
-        datetxt        = view.findViewById(R.id.datetxt);
         tmptxt         = view.findViewById(R.id.tmptxt);
         conditiontxt   = view.findViewById(R.id.conditiontxt);
-        windspeedtxt   = view.findViewById(R.id.windspeedtxt);
-        humidtxt       = view.findViewById(R.id.humidtxt);
+        day_date_txt   = view.findViewById(R.id.day_date_txt);
         searchbar      = view.findViewById(R.id.searchBar);
 
-        // Extended metrics
-        feelsliketxt   = view.findViewById(R.id.feelsliketxt);
-        minmaxtxt      = view.findViewById(R.id.minmaxtxt);
-        pressuretxt    = view.findViewById(R.id.pressuretxt);
-        cloudcovertxt  = view.findViewById(R.id.cloudcovertxt);
-        visibilitytxt  = view.findViewById(R.id.visibilitytxt);
+        // Extended metrics (via includes)
+        setupDetailItem(view.findViewById(R.id.include_humidity), R.drawable.humidity, getString(R.string.humidity_label));
+        setupDetailItem(view.findViewById(R.id.include_wind), R.drawable.wind, getString(R.string.wind_label));
+        setupDetailItem(view.findViewById(R.id.include_pressure), R.drawable.pressure, getString(R.string.pressure_label));
+        setupDetailItem(view.findViewById(R.id.include_feels_like), R.drawable.feelslike, getString(R.string.feels_like_label));
+        setupDetailItem(view.findViewById(R.id.include_min_max), R.drawable.temp_minmax, "Min/Max");
+        setupDetailItem(view.findViewById(R.id.include_visibility), R.drawable.visibility, getString(R.string.visibility_label));
+
+        humidtxt       = view.findViewById(R.id.include_humidity).findViewById(R.id.detailValue);
+        windspeedtxt   = view.findViewById(R.id.include_wind).findViewById(R.id.detailValue);
+        pressuretxt    = view.findViewById(R.id.include_pressure).findViewById(R.id.detailValue);
+        feelsliketxt   = view.findViewById(R.id.include_feels_like).findViewById(R.id.detailValue);
+        minmaxtxt      = view.findViewById(R.id.include_min_max).findViewById(R.id.detailValue);
+        visibilitytxt  = view.findViewById(R.id.include_visibility).findViewById(R.id.detailValue);
+
         sunrisetxt     = view.findViewById(R.id.sunrisetxt);
         sunsettxt      = view.findViewById(R.id.sunsettxt);
+    }
+
+    private void setupDetailItem(View root, int iconRes, String label) {
+        ((android.widget.ImageView) root.findViewById(R.id.detailIcon)).setImageResource(iconRes);
+        ((TextView) root.findViewById(R.id.detailLabel)).setText(label);
     }
 
     private void initRetrofitService() {
@@ -145,29 +154,26 @@ public class Fragment_weather extends Fragment {
 
         // Primary metrics
         citytxt.setText(data.getName());
-        tmptxt.setText(data.getMain().getTemp() + "°C");
+        tmptxt.setText(getString(R.string.temp_format, data.getMain().getTemp()));
         conditiontxt.setText(mainCondition);
-        windspeedtxt.setText(data.getWind().getSpeed() + " m/s");
-        humidtxt.setText(data.getMain().getHumidity() + "%");
+        windspeedtxt.setText(getString(R.string.wind_speed_format, data.getWind().getSpeed()));
+        humidtxt.setText(getString(R.string.humidity_value, data.getMain().getHumidity()));
 
-        // Location card - date and day (city's local time)
-        daytxt.setText(formatUnixDate(data.getDt(), timezoneOffset, "EEEE"));
-        datetxt.setText(formatUnixDate(data.getDt(), timezoneOffset, "dd MMM"));
+        // Date and Day
+        String day = formatUnixDate(data.getDt(), timezoneOffset, "EEEE");
+        String date = formatUnixDate(data.getDt(), timezoneOffset, "dd MMMM");
+        day_date_txt.setText(String.format("%s, %s", day, date));
 
         // Extended metrics
-        feelsliketxt.setText(data.getMain().getFeels_like() + "°C");
-        minmaxtxt.setText(
-                String.format(Locale.getDefault(), "%.0f°/%.0f°",
-                        data.getMain().getTemp_min(),
-                        data.getMain().getTemp_max())
-        );
-        pressuretxt.setText(data.getMain().getPressure() + " hPa");
-        cloudcovertxt.setText(data.getClouds().getAll() + "%");
-        visibilitytxt.setText(
-                String.format(Locale.getDefault(), "%.1f km", data.getVisibility() / 1000.0)
-        );
-        sunrisetxt.setText("↑ " + formatUnixTime(data.getSys().getSunrise(), timezoneOffset));
-        sunsettxt.setText("↓ " + formatUnixTime(data.getSys().getSunset(), timezoneOffset));
+        feelsliketxt.setText(getString(R.string.feels_like_format, data.getMain().getFeels_like()));
+        minmaxtxt.setText(getString(R.string.min_max_format, 
+                data.getMain().getTemp_min(), 
+                data.getMain().getTemp_max()));
+        pressuretxt.setText(getString(R.string.pressure_value, data.getMain().getPressure()));
+        visibilitytxt.setText(getString(R.string.visibility_format, data.getVisibility() / 1000.0));
+        
+        sunrisetxt.setText(formatUnixTime(data.getSys().getSunrise(), timezoneOffset));
+        sunsettxt.setText(formatUnixTime(data.getSys().getSunset(), timezoneOffset));
 
         updateWeatherAnimation(mainCondition);
         Log.d(TAG, "Weather updated: " + data.getName());
